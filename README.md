@@ -1,163 +1,162 @@
-# 门禁控制器硬件设计
+# Access Control Controller Hardware Design
 
-## 项目简介
+## Project Introduction
 
-本项目是一个基于STM32的门禁控制器硬件设计方案，支持网络通信、多种输入输出接口，适用于门禁管理系统。
-该项目是2018年6月设计，8月落地国内某大型技术园区并良好运行，是我刚毕业时独立完成的第二个项目细节不到位的地方可自行优化。
+This project is a hardware design solution for an access control controller based on STM32, supporting network communication and multiple input/output interfaces, suitable for access control management systems.
 
-## 硬件规格
+## Hardware Specifications
 
-### 主控制器
+### Main Controller
 
-- **型号**: STM32F103RET6
-- **内核**: ARM Cortex-M3
-- **主频**: 72MHz
+- **Model**: STM32F103RET6
+- **Core**: ARM Cortex-M3
+- **Frequency**: 72MHz
 - **Flash**: 512KB
 - **SRAM**: 64KB
-- **封装**: LQFP64
+- **Package**: LQFP64
 
-### 网络接口
+### Network Interface
 
-- **以太网芯片**: W5500
-- **接口**: SPI
-- **速率**: 10/100Mbps
-- **协议支持**: TCP/IP, UDP
+- **Ethernet Chip**: W5500
+- **Interface**: SPI
+- **Speed**: 10/100Mbps
+- **Protocol Support**: TCP/IP, UDP
 
-### 输出接口
+### Output Interfaces
 
-#### 继电器输出
+#### Relay Output
 
-- **数量**: 2路
-- **触点类型**: 常开&常闭
-- **负载能力**: 250VAC/5A 或 30VDC/5A
-- **应用**: 门锁控制、报警输出
+- **Quantity**: 2 channels
+- **Contact Type**: Normally Open & Normally Closed
+- **Load Capacity**: 250VAC/5A or 30VDC/5A
+- **Application**: Door lock control, alarm output
 
-#### 蜂鸣器输出
+#### Buzzer Output
 
-- **数量**: 1路
-- **应用**: 报警提示、操作反馈
+- **Quantity**: 1 channel
+- **Application**: Alarm prompt, operation feedback
 
-### 输入接口
+### Input Interfaces
 
-#### RS485接口
+#### RS485 Interface
 
-- **数量**: 3路
-- **通信速率**: 最高115200bps
-- **隔离**: 光电隔离
-- **应用**: 读卡器通信、扩展模块
+- **Quantity**: 3 channels
+- **Communication Rate**: Up to 115200bps
+- **Isolation**: Optical isolation
+- **Application**: Card reader communication, expansion modules
 
-#### 韦根接口
+#### Wiegand Interface
 
-- **数量**: 2路
-- **数据格式**: Data0/Data1
-- **应用**: 读卡器输入
+- **Quantity**: 2 channels
+- **Data Format**: Data0/Data1
+- **Application**: Card reader input
 
-#### 开门信号输入
+#### Door Open Signal Input
 
-- **数量**: 2路
-- **隔离**: 光电隔离
-- **应用**: 出门按钮
+- **Quantity**: 2 channels
+- **Isolation**: Optical isolation
+- **Application**: Exit button
 
-#### 门磁输入
+#### Door Magnetic Input
 
-- **数量**: 2路
-- **隔离**: 光电隔离
-- **应用**: 门磁状态检测
+- **Quantity**: 2 channels
+- **Isolation**: Optical isolation
+- **Application**: Door magnetic status detection
 
-### 调试接口
+### Debug Interface
 
-- **类型**: UART
-- **电平**: TTL（3.3V）
-- **备注**: 与RS232共用，焊接RS232后无法使用TTL电平
+- **Type**: UART
+- **Level**: TTL (3.3V)
+- **Note**: Shared with RS232, TTL level cannot be used after RS232 is soldered
 
-### 存储与时钟
+### Storage and Clock
 
-#### FLASH存储芯片
+#### FLASH Storage Chip
 
-- **型号**: W25Q64（8MB）
-- **接口**: SPI
-- **容量**: 8MB/16MB
-- **擦写次数**: >100,000次
-- **数据保持**: >20年
-- **应用**: 固件存储、数据记录
+- **Model**: W25Q64 (8MB)
+- **Interface**: SPI
+- **Capacity**: 8MB/16MB
+- **Erase/Write Cycles**: >100,000 times
+- **Data Retention**: >20 years
+- **Application**: Firmware storage, data recording
 
-#### EEPROM存储芯片
+#### EEPROM Storage Chip
 
-- **型号**: AT24C02（256B）/ AT24C04（512B）
-- **接口**: I2C
-- **容量**: 256B/512B
+- **Model**: AT24C02 (256B) / AT24C04 (512B)
+- **Interface**: I2C
+- **Capacity**: 256B/512B
 
-#### 实时时钟芯片
+#### Real-time Clock Chip
 
-- **型号**: BM8563ESA
-- **接口**: I2C
-- **备用电源**: 3V纽扣电池
-- **闰年补偿**: 自动
-- **应用**: 实时时钟、时间记录、定时任务
+- **Model**: BM8563ESA
+- **Interface**: I2C
+- **Backup Power**: 3V button battery
+- **Leap Year Compensation**: Automatic
+- **Application**: Real-time clock, time recording, scheduled tasks
 
-## 项目结构
+## Project Structure
 
 ```
 Access_Control_Controller_HW/
-├── SCH/                    # 原理图文件
-│   ├── 主控.SchDoc        # 主控电路
-│   ├── 电源.SchDoc        # 电源电路
-│   ├── TCP_IP.SchDoc      # 以太网电路
-│   ├── 485.SchDoc         # RS485电路
-│   ├── 继电器.SchDoc      # 继电器输出电路
-│   ├── 开关量输入.SchDoc  # 开关量输入电路
-│   ├── 韦根输入输出.SchDoc # 韦根接口电路
-│   └── 门禁控制器顶层设计.SchDoc # 顶层原理图
-├── PCB/                    # PCB文件
+├── SCH/                    # Schematic files
+│   ├── 主控.SchDoc        # Main control circuit
+│   ├── 电源.SchDoc        # Power circuit
+│   ├── TCP_IP.SchDoc      # Ethernet circuit
+│   ├── 485.SchDoc         # RS485 circuit
+│   ├── 继电器.SchDoc      # Relay output circuit
+│   ├── 开关量输入.SchDoc  # Digital input circuit
+│   ├── 韦根输入输出.SchDoc # Wiegand interface circuit
+│   └── 门禁控制器顶层设计.SchDoc # Top-level schematic
+├── PCB/                    # PCB files
 │   └── 门禁控制器V0.2.PcbDoc
-├── LIB/                    # 元件库
-│   ├── KNX网关.SCHLIB     # 原理图库
-│   ├── PcbLib1.PcbLib     # PCB封装库
-│   └── this.SchLib        # 原理图库
-└── Project/                # 项目文件
+├── LIB/                    # Component libraries
+│   ├── KNX网关.SCHLIB     # Schematic library
+│   ├── PcbLib1.PcbLib     # PCB package library
+│   └── this.SchLib        # Schematic library
+└── Project/                # Project files
     ├── 门禁控制器V0.2.PrjPcb
     └── 门禁控制器V0.2.PrjPcbStructure
 ```
 
-## 电源规格
+## Power Specifications
 
-- **输入电压**: DC 12V -24V
-- **电源保护**: 过压保护、过流保护、反接保护
+- **Input Voltage**: DC 12V -24V
+- **Power Protection**: Over-voltage protection, over-current protection, reverse connection protection
 
-## 功能特性
+## Features
 
-- 支持TCP/IP网络通信，可远程控制
-- 双路门禁控制，支持双门管理
-- 支持多种读卡器接口（韦根、RS485）
-- 开门信号实时检测
-- 状态输出和报警功能
-- 调试接口方便开发和维护
-- 光电隔离设计，抗干扰能力强
-- 外部FLASH存储，支持大容量数据记录
-- EEPROM配置存储，掉电不丢失
-- 实时时钟功能，支持时间记录和定时任务
+- Support TCP/IP network communication for remote control
+- Dual access control, supporting dual door management
+- Support multiple card reader interfaces (Wiegand, RS485)
+- Real-time door open signal detection
+- Status output and alarm functions
+- Debug interface for easy development and maintenance
+- Optical isolation design for strong anti-interference capability
+- External FLASH storage for large capacity data recording
+- EEPROM configuration storage, non-volatile
+- Real-time clock function for time recording and scheduled tasks
 
-## 开发工具
+## Development Tools
 
-- 工具: Altium Designer
+- **Tool**: Altium Designer
 
-## 注意事项
+## Notes
 
-1. **调试接口选择**: Debug串口与RS232共用同一物理接口，焊接RS232电平转换芯片后将无法使用TTL电平调试
-2. **电源连接**: 上电前请确认电源电压为DC 12V，正负极正确
-3. **继电器负载**: 继电器输出连接感性负载时需加装浪涌吸收电路
-4. **RS485终端**: RS485总线两端需加装120Ω终端电阻
-5. **韦根接线**: 韦根接口线缆长度建议不超过100米
+1. **Debug Interface Selection**: Debug UART shares the same physical interface with RS232, TTL level cannot be used after RS232 level conversion chip is soldered
+2. **Power Connection**: Please confirm the power supply voltage is DC 12V and the polarity is correct before powering on
+3. **Relay Load**: Surge absorption circuit is required when relay output is connected to inductive load
+4. **RS485 Termination**: 120Ω termination resistors must be added at both ends of RS485 bus
+5. **Wiegand Wiring**: Wiegand interface cable length is recommended not to exceed 100 meters
 
-## 版本信息
+## Version Information
 
-- **当前版本**: V0.2
-- **更新日期**: 2026-03-29
+- **Current Version**: V0.2
+- **Update Date**: 2026-03-29
 
-## 许可证
+## License
 
-本项目仅供学习和参考使用。
+This project is for learning and reference only.
 
-## 联系方式
+## Contact
 
-如有问题或建议，请通过项目Issue反馈。
+If you have any questions or suggestions, please provide feedback through project Issues.
